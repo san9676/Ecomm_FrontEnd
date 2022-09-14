@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <script src="request.js"></script> -->
+<script>
+function login(){
+	var username = document.getElementById("Username").value;
+	var password = document.getElementById("Password").value;
+	var jsonObj={
+		"Username": username,
+		"Password": password,
+	};
+	var formData =JSON.stringify(jsonObj);
+var request = new XMLHttpRequest();
+request.open("post", "http://localhost:10909/login")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send(formData);
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ console.log(res);
+if(res.Status =="200"){
+	sessionStorage.setItem("Sessionid",res.SessionID);
+	sessionStorage.setItem("UserName",res.Username);
+	alert(res.Username);
+	alert("Login Sucess");
+	window.location.href="HomePage.html";
+   }
+   else if (res.Status =="300"){
+   alert(res.ResMsg);
+   alert("Login Failed");
+   window.location.href="loginHome.html";
+  }
+  else {
+       alert(res.Username);
+       alert("Failed Case");
+      window.location.href="loginHome.html";
+  }
+
+
+}
+}
+</script>
+</head>
+<body style="background-color:Aquamarine;">
+<h2>LOGIN</h2>
+
+<form action='javascript:login();' method="post" >
+  <label for="Username">Username:</label><br>
+  <input type="text" id="Username" name="Username" value=""><br>
+  <label for="Password">Password:</label><br>
+  <input type="text" id="Password" name="Password" value=""><br><br>
+  <input type="submit" value="login"><br><br>
+</form> 
+
+<a href="CreateAccount.html"> New User</a>
+</body>
+</html>

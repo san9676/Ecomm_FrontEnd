@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="C:\Workspace_Bw6\E-CommerceDOC\FrontEnd\TableStyle.css" />
+<!-- <script src="request.js">-->
+<script >
+function GetIndividualProduct(){
+    var product_id = document.getElementById("Product_ID").value;
+	var sid=sessionStorage.getItem('Sessionid')
+   /* var jsonObj={
+        "Product_ID":product_id,
+        };
+    var formData =JSON.stringify(jsonObj);*/
+var request = new XMLHttpRequest();
+request.open("get","http://localhost:10910/GetIndividualProduct?ProductId="+product_id+"&SesionId=" +sid)
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+
+ var json = res.Product
+ alert(json);
+ /* console.log(res); */
+if(res.ResCode =="200"){
+	alert("Get Individual Product Sucessful");
+	console.log(json);
+	loadData(json);
+	}
+	else {
+       alert(res.ResCode);
+       alert("Fail Case");
+      window.location.href= "GetIndividualProduct.html";
+  }
+  async function loadData(json) 
+  {
+  var selector = "results";
+  
+  jsonToTable(json,selector);
+  
+  function jsonToTable(json, selector) 
+  {
+  var html=[];
+  
+	html.push("<table>\n<tbody>");
+	html.push("<tr>");
+
+    html.push("<th>" + "PRODUCT_ID" + "</td>");
+    html.push("<th>" + "PRODUCT_NAME" + "</td>");
+    html.push("<th>" + "BRAND_ID " + "</td>");
+    html.push("<th>" + "CATEGORY_ID" + "</td>");
+    html.push("<th>" + "MODEL_YEAR" + "</td>");
+	html.push("<th>" + "LIST_PRICE" + "</td>");
+	
+    html.push("</tr>")
+	json.forEach(function (item) {
+      //begin forEach
+
+      //add the opening table row tag
+      html.push("<tr>");
+
+      //loop though each of the objects properties
+      for (var key in item) {
+        //begin for in loop
+
+        //append the table data containing the objects property value
+        html.push("<td>" + item[key] + "</td>");
+      } //end for in loop
+
+      //add the closing table row tag
+      html.push("</tr>");
+    });
+  
+  html.push("<table>\n</tbody>");
+
+    //testing display of results
+    document.getElementById(selector).innerHTML = html.join("");
+  } 
+}	
+
+   /* window.location.href="Login.html"; */
+   }
+}
+
+</script
+>
+</head>
+<body style="background-color:Aquamarine;">
+<h2>Get Product</h2>
+<style>
+h2 {text-align: center;}
+</style>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form>
+<form action="javascript:GetIndividualProduct()">
+  <label for="Product_ID">Product_ID:</label><br>
+  <input type="text" id="Product_ID" name="Product_ID" value=""><br>
+   <input type="submit" value="Submit">
+  </form> 
+  <div id="results"></div>
+</body>
+</html>
+

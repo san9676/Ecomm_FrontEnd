@@ -1,0 +1,104 @@
+<html>
+<head>
+<script>
+function UpdateAccount(){
+   var UserName= sessionStorage.getItem('UserName');
+   var FIRSTNAME = document.getElementById("fid").value;
+   var MIDDLENAME = document.getElementById("mid").value;
+   var LASTNAME = document.getElementById("lid").value;
+   var PHNo = document.getElementById("pid").value;
+   var GENDER = document.getElementById("gid").value;
+   var EMAIL = document.getElementById("eid").value;
+   var PASSWORD = document.getElementById("pswd").value;
+   var Sid=sessionStorage.getItem('Sessionid');
+var jsonObj = { 
+ "FristName": FIRSTNAME,
+ "MiddleName": MIDDLENAME,
+ "LastName": LASTNAME,
+ "PhoneNum": PHNo,
+ "Gender" : GENDER
+ "Email": EMAIL,
+ "Username":  UserName,
+ "Password": PASSWORD, 
+ "SessionID": Sid
+};
+var formData =JSON.stringify(jsonObj);
+var request = new XMLHttpRequest();
+request.open("post", "http://localhost:10908/updateaccount")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send(formData);
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ 
+if(res.Status == "200"){
+alert(res.ResMsg);
+alert("Upadated UserDetails");
+window.location.assign( 'HomePage.html');
+}
+else{
+alert(res.ResMsg);
+window.location.assign( 'UpdateAccount.html');
+}
+}
+
+}
+function logout(sid){
+  var Sessionid=sessionStorage.getItem('Sessionid');
+  alert(Sessionid);
+  var request = new XMLHttpRequest();
+request.open("get", "http://localhost:10908/logout/{'+Sessionid+'}")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ if(res.Status=="200"){
+  window.location.href="Login.html"
+       alert("Logout call");
+	   }
+	 else{
+		alert("logout failed")
+		window.location.href="HomePage.html";
+	 }
+   }
+   }
+   
+</script>
+</script>
+</head>
+<body style="background-color:Aquamarine;">
+<h2>Update Account</h2>
+<form action='javascript:UpdateAccount();' method="POST" >
+
+  <label><b>FirstName:</b></label>
+  <input type="text" placeholder="Enter FirstName" name="FirstName" id='fid'><br><br>
+  
+  <label><b>MiddleName:</b></label>
+ <input type="text" placeholder="Enter MiddleName" name="MiddleName" id='mid'><br><br>
+ 
+  <label><b>LastName:</b></label>
+  <input type="text" placeholder="Enter LastName" name="LastName" id='lid'><br><br>
+  
+  <label><b>PhNo:</b></label>
+  <input type="text" placeholder="Enter Phone" name="Phone" id='pid'><br><br> 
+  
+ <label><b>Gender:</b></label>
+  <input type="text" placeholder="Enter Gender" name="Gender" id='gid'><br><br>
+
+   <label><b>EmailId:</b></label>
+  <input type="email" placeholder="Enter EmailId" name="EmailId" id='eid'><br><br>
+  
+ <label><b>Password:</b></label>
+  <input type="Password" placeholder="Enter Password" name="Password" id='pswd' ><br><br> 
+
+  
+  <button type="submit">Submit</button> <br><br>
+  
+   <a href="HomePage.html">HomePage</a><br><br>
+
+<!-- 
+<input type="hidden" var=${sid} id="sid">
+ <button type="submit" onclick="logout(sid)">Logout</button>-->
+  
+</form>
+</body>
+</html>

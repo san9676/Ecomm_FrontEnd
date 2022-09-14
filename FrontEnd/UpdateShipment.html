@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <script src="request.js">-->
+<script >
+function UpdateShipment(){
+	var sid=sessionStorage.getItem('Sessionid');
+    var order_id = document.getElementById("OrderID").value;
+	var TrackingID= document.getElementById("TrackingID").value;
+	var product_id = document.getElementById("PRODUCT_ID").value;
+	var Status = document.getElementById("Status").value;
+	
+	var jsonObj={
+  "TrackingID": TrackingID,
+  "OrderID": order_id,
+  "ProductID": product_id,
+  "Status": Status,
+  "SessionID": sid
+}
+var formData =JSON.stringify(jsonObj);
+var request = new XMLHttpRequest();
+request.open("post","http://localhost:10912/updateShipment")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send(formData);
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+    if (res.ResCode == "200"){
+   alert("Shipment Updated Successfully");
+   window.location.assign( 'HomePage.html');
+   }
+   
+   else{
+     alert ("Updataion Falied");
+	 window.location.assign( 'UpdateShipment.html');
+   }
+}
+}
+</script
+>
+</head>
+<body>
+<h2>UpdateShipment</h2>
+<style>
+h2 {text-align: center;}
+</style>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form>
+<form action="javascript:UpdateShipment()">
+  <label for="TrackingID">TrackingID:</label><br>
+  <input type="text" id="TrackingID" name="TrackingID" value="" required><br>
+  <label for="OrderID">OrderID:</label><br>
+  <input type="text" id="OrderID" name="OrderID" value="" required><br>
+  <label for="PRODUCT_ID">PRODUCT_ID:</label><br>
+  <input type="text" id="PRODUCT_ID" name="PRODUCT_ID" value="" required><br>
+  <label for="Status">Status:</label><br>
+  <input type="text" id="Status" name="Status" value="" required><br>
+   <input type="submit" value="Submit">
+  </form> 
+</body>
+</html>
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <script src="request.js">-->
+<script >
+function cancelorder(){
+	var ORDER_ID = document.getElementById("ORDER_ID").value;
+	var Sid=sessionStorage.getItem('Sessionid');
+    var jsonObj={
+		"OrderID": ORDER_ID,
+		"SesionID": Sid
+	}
+    var formData =JSON.stringify(jsonObj);
+var request = new XMLHttpRequest();
+request.open("post","http://localhost:10911/CancelOrder")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send(formData);
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ console.log(res);
+if(res.ResCode =="200"){
+   
+   alert(res.ResMsg);
+  }
+  else if(res.ResCode == "100"){
+    alert(res.ResMsg);
+  }
+  else {
+      
+       alert(res.ResMsg);
+      window.location.href= "CancelOrder.html";
+  }
+}
+}
+</script
+>
+</head>
+<body style="background-color:Aquamarine;">
+<h2>CancelOrder</h2>
+<style>
+h2 {text-align: center;}
+</style>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form>
+<form action="javascript:cancelorder()">
+  <label for="ORDER_ID">ORDER_ID:</label><br>
+  <input type="text" id="ORDER_ID" name="ORDER_ID" value=""><br>
+   <input type="submit" value="Submit">
+  </form> 
+  <form action="Logout.html">
+   <input type="submit" value="logout">
+  </form>
+</body>
+</html>
+

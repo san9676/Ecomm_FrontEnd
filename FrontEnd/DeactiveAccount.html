@@ -1,0 +1,74 @@
+<html>
+<head>
+<script>
+function DeactiveAccount(){
+   var Username = document.getElementById("usn").value;
+   var Password = document.getElementById("pswd").value;
+   var Sid=sessionStorage.getItem('Sessionid');
+   var jsonObj = { 
+  
+ "Username": Username,
+ "Password": Password,
+ "SessionID": Sid
+	
+  };
+  var formData =JSON.stringify(jsonObj);
+  var request = new XMLHttpRequest();
+request.open("post", "http://localhost:10908/deactivateAccount")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send(formData);
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ 
+if(res.ResCode == "200"){
+alert(res.ResMsg);
+alert("Upadated UserDetails");
+window.location.assign( 'HomePage.html');
+}
+else{
+alert(res.ResMsg);
+window.location.assign( 'UpdateAccount.html');
+}
+}
+
+}
+function logout(sid){
+  var Sessionid=sessionStorage.getItem('Sessionid');
+  alert(Sessionid);
+  var request = new XMLHttpRequest();
+request.open("get", "http://localhost:10908/logout/{'+Sessionid+'}")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ if(res.Status=="200"){
+  window.location.href="Login.html"
+       alert("Logout call");
+	   }
+	 else{
+		alert("logout failed")
+		window.location.href="HomePage.html";
+	 }
+   }
+   }
+</script>
+</script>
+</head>
+<body  style="background-color:Aquamarine;">
+<h2>DeactiveAccount</h2>
+<form action='javascript:DeactiveAccount();' method="POST" >
+  <label><b>Username:</b></label><br>
+  <input type="text" placeholder="Enter Username" name="Username" id='usn'><br><br>
+  
+  <label><b>Password:</b></label><br>
+  <input type="password" placeholder="Enter Password" name="Password" id='pswd'><br><br>
+  <button type="submit">DeactiveAccount</button><br><br>
+   <a href="HomePage.html">HomePage</a><br><br>
+   
+   <!-- 
+   <input type="hidden" var=${sid} id="sid">
+  <button type="submit" onclick="logout(sid)">Logout</button>-->
+  </form>
+   </body>
+  </html>
+  

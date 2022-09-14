@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="C:\Workspace_Bw6\E-CommerceDOC\FrontEnd\TableStyle.css" />
+<!-- <script src="request.js">-->
+<script >
+function GetOrder(){
+    var OrderID = document.getElementById("oid").value;
+	var sid=sessionStorage.getItem('Sessionid')
+   
+var request = new XMLHttpRequest();
+request.open("get","http://localhost:10911/GetOrder?SessionID="+sid+"&OrderID="+OrderID)
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ var json = res.Order
+ /* console.log(res); */
+if(res.ResCode =="200"){
+	alert("Sucessful");
+	console.log(json);
+	loadData(json);
+	}
+	else if(res.ResCode=="100"){
+	alert("Order Doesn't exist")
+	window.location.href= "GetOrder.html";
+	}
+	else {
+       alert(res.ResCode);
+       alert("Fail Case");
+      window.location.href= "GetOrder.html";
+  }
+  
+  async function loadData(json) 
+  {
+  var selector = "results";
+  
+  jsonToTable(json,selector);
+  
+  function jsonToTable(json, selector) 
+  {
+  var html=[];
+  
+	html.push("<table>\n<tbody>");
+	html.push("<tr>");
+
+    html.push("<th>" + "ORDER_ID" + "</td>");
+    html.push("<th>" + "CUSTOMERID" + "</td>");
+    html.push("<th>" + "PRODUCT_ID " + "</td>");
+    html.push("<th>" + "QUANTITY" + "</td>");
+    html.push("<th>" + "LIST_PRICE" + "</td>");
+	html.push("<th>" + "DISCOUNT" + "</td>");
+	html.push("<th>" + "ORDER_STATUS" + "</td>");
+	html.push("<th>" + "ORDER_DATE" + "</td>");
+	html.push("<th>" + "REQUIRED_DATE" + "</td>");
+	html.push("<th>" + "SHIPPED_DATE" + "</td>");
+	
+    html.push("</tr>")
+	//json.forEach(function (item) {
+      //begin forEach
+
+      //add the opening table row tag
+      html.push("<tr>");
+
+      //loop though each of the objects properties
+      for (var key in json) {
+        //begin for in loop
+
+        //append the table data containing the objects property value
+        html.push("<td>" + json[key] + "</td>");
+      } //end for in loop
+
+      //add the closing table row tag
+      html.push("</tr>");
+    //});
+  
+  html.push("<table>\n</tbody>");
+
+    //testing display of results
+    document.getElementById(selector).innerHTML = html.join("");
+  } 
+}	
+
+   /* window.location.href="Login.html"; */
+   }
+}
+
+</script
+>
+</head>
+<body style="background-color:Aquamarine;">
+<h2>Get Order</h2>
+<style>
+h2 {text-align: center;}
+</style>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form>
+<form action="javascript:GetOrder()">
+  <label for="OrderID">OrderID:</label><br>
+<input type="text" placeholder="Enter OrderID" name="OrderID" id="oid" required>
+   <input type="submit" value="Submit">
+  </form> 
+  <div id="results"></div>
+</body>
+</html>
+

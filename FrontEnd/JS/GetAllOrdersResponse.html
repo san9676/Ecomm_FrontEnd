@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Pagination</title>
+<!-- default pagination styles including -->
+<script type="text/javascript" src="path_to/jquery.js"></script>
+<script type="text/javascript" src="path_to/jquery.simplePagination.js"></script>
+<link type="text/css" rel="stylesheet"
+href="path_to/simplePagination.css" />
+<!-- CSS styles -->
+<style type="text/css">
+
+h2 {
+color: lime;
+text-align: center;
+}
+h3 {
+color: olive;
+text-align: center;
+}
+.a {
+text-align: center;
+color: white;
+}
+</style>
+<!-- JavaScript logic -->
+<script type="text/javascript">
+var currentPage = 1;
+var CountPerEachPage = 2;
+//json object mapping for content
+
+//function for go to previous page
+function getPereviousPage() {
+if (currentPage > 1) {
+currentPage--;
+validateEachPage(currentPage);
+}
+}
+//function for go to next page
+function getNextPage() {
+if (currentPage < numberOfPages()) {
+currentPage++;
+validateEachPage(currentPage);
+}
+}
+//function for validating real time condition like if move to last page, last page disabled etc
+function validateEachPage(paginationPage) {
+var nextPage = document.getElementById("nextPage");
+var previousPage = document.getElementById("previousPage");
+var showMyTable = document.getElementById("showTable");
+var paginationPage_span = document.getElementById("paginationPage");
+var sid=sessionStorage.getItem('Sessionid');
+//var jsonObj={
+  //   "Status" : "GetAllOrders"
+};
+var formData =JSON.stringify(jsonObj);
+var request = new XMLHttpRequest();
+	
+	request.open("get","http://localhost:10908/GetOrderHistory?SessionID="+sid)
+	request.setRequestHeader("Content-Type","application/json;charset=UTF-8");
+	request.send();
+	request.onload= () => {
+		var res = JSON.parse(request.responseText);
+		if (paginationPage < 1)
+		paginationPage = 1;
+		if (paginationPage > numberOfPages())
+		paginationPage = numberOfPages();
+		showMyTable.innerHTML = "";
+		var table = document.createElement("TABLE");
+        table.border = "1";
+		var row = table.insertRow(-1);
+        for (key in res.Order[1]) {
+            var headerCell = document.createElement("TH");
+            headerCell.innerHTML = key;
+            row.appendChild(headerCell);
+        }
+ 
+		for (var i = (paginationPage - 1) * CountPerEachPage; i < (paginationPage * CountPerEachPage); i++) {
+		    row = table.insertRow(-1);
+			for ( key in res.Order[i]) {
+						var cell = row.insertCell(-1);
+                        cell.innerHTML = res.Order[i][key];
+					}
+		}
+		var dvTable = document.getElementById("dvTable");
+        dvTable.innerHTML = "";
+        dvTable.appendChild(table);
+		paginationPage_span.innerHTML = paginationPage;
+		if (paginationPage == 1) {
+		previousPage.style.visibility = "hidden";
+		} else {
+		previousPage.style.visibility = "visible";
+		}
+		if (paginationPage == numberOfPages()) {
+		nextPage.style.visibility = "hidden";
+		} else {
+		nextPage.style.visibility = "visible";
+		}
+		}
+}
+//function per number of Pages
+function numberOfPages() {
+return 5;
+}
+//loading al JavaScript functions functionality
+window.onload = function() {
+validateEachPage(1);
+};
+</script>
+</head>
+<body>
+<h2>Get All Orders</h2>
+<div id="dvTable"></div> 
+
+<div id="showTable"></div>
+<div class="a">
+<a href="javascript:getPereviousPage()" id="previousPage">Previous
+Page</a> <a href="javascript:getNextPage()" id="nextPage">Next Page</a>
+Page Number: <span id="paginationPage"></span>
+</div> 
+
+</body>
+</html>

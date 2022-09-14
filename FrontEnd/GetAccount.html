@@ -1,0 +1,118 @@
+<html>
+<head>
+<link rel="stylesheet" href="C:\Workspace_Bw6\E-CommerceDOC\FrontEnd\TableStyle.css" />
+<script>
+function getDetails()
+{
+	var sessionID=sessionStorage.getItem('Sessionid')
+	var username=document.getElementById("username").value;
+var request = new XMLHttpRequest();
+request.open("get", "http://localhost:10908/getAccount?Username=" + username+ "&SessionId=" +sessionID)
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ var json = res.Details
+if(res.Status == "200"){
+alert(res.ResMsg);
+
+loadData(json);
+//document.body.innerHTML='<br><a href="HomePage.html">HomePage</a>'
+}
+else{
+alert(res.ResMsg);
+window.location.assign( 'GetAccount.html');
+}
+async function loadData(json) 
+  {
+  var selector = "results";
+  
+  jsonToTable(json,selector);
+  
+  function jsonToTable(json, selector) 
+  {
+  var html=[];
+  
+	html.push("<table>\n<tbody>");
+	html.push("<tr>");
+
+    html.push("<th>" + "FirstName" + "</td>");
+    html.push("<th>" + "MiddleName" + "</td>");
+    html.push("<th>" + "LastName " + "</td>");
+    html.push("<th>" + "PhoneNum" + "</td>");
+    html.push("<th>" + "Gender" + "</td>");
+	html.push("<th>" + "Email" + "</td>");
+	html.push("<th>" + "Username" + "</td>");
+	
+    html.push("</tr>")
+	//array(json).forEach(function (item) {
+      //begin forEach
+
+      //add the opening table row tag
+      html.push("<tr>");
+
+      //loop though each of the objects properties
+      for (var key in json) {
+        //begin for in loop
+
+        //append the table data containing the objects property value
+        html.push("<td>" + json[key] + "</td>");
+      } //end for in loop
+
+      //add the closing table row tag
+      html.push("</tr>");
+    //});
+  
+  html.push("<table>\n</tbody>");
+
+    //testing display of results
+    document.getElementById(selector).innerHTML = html.join("");
+  } 
+}
+}
+}
+
+function logout(sid){
+  var Sessionid=sessionStorage.getItem('Sessionid');
+  alert(Sessionid);
+  var request = new XMLHttpRequest();
+request.open("get", "http://localhost:10908/logout/{'+Sessionid+'}")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ if(res.Status=="200"){
+  window.location.href="Login.html"
+       alert("Logout call");
+	   }
+	 else{
+		alert("logout failed")
+		window.location.href="HomePage.html";
+	 }
+   }
+}
+</script>
+</head>
+<body style="background-color:Aquamarine;">
+
+<h2> Get Account Deatils</h2>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form>
+<form action='javascript:getDetails();' method="get">
+  <label><b>Username</b></label>
+  <input type="text"  name="Username" id='username'><br><br>
+  
+  <button type="submit">Submit</button> <br><br>
+  <div id="results"></div>
+ <!-- <a href="HomePage.html">HomePage</a><br><br>-->
+ 
+ <!-- 
+ <input type="hidden" var=${sid} id="sid">
+ <button type="submit" onclick="logout(sid)">Logout</button>-->
+</form> 
+</body>
+</html>
+
+
+

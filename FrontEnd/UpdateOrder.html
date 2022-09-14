@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <script src="request.js">-->
+<script >
+function UpdateOrder(){
+	var sid=sessionStorage.getItem('Sessionid');
+    var order_id = document.getElementById("ORDER_ID").value;
+	var Customer_id= document.getElementById("Customer_ID").value;
+	var product_id = document.getElementById("PRODUCT_ID").value;
+	var quantity = document.getElementById("QUANTITY").value;
+	var list_price = document.getElementById("LIST_PRICE").value;
+	var discount = document.getElementById("DISCOUNT").value;
+	var order_status = document.getElementById("ORDER_STATUS").value;
+	var required_date = document.getElementById("REQUIRED_DATE").value;
+	var shipped_date = document.getElementById("SHIPPED_DATE").value;
+	
+	var jsonObj={
+	  "OrderID": order_id,
+	  "CUSTOMERID": Customer_id,
+	  "PRODUCT_ID": product_id,
+	  "Quantity": quantity,
+	  "LIST_PRICE": list_price,
+	  "DISCOUNT": discount,
+	  "ORDER_STATUS": order_status,
+	  "REQUIRED_DATE": required_date,
+	  "SHIPPED_DATE": shipped_date,
+	  "SessionID": sid
+	}
+var formData =JSON.stringify(jsonObj);
+var request = new XMLHttpRequest();
+request.open("post","http://localhost:10911/UpdateOrder")
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send(formData);
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+    if (res.ResCode == "200"){
+   alert("Order Updated Sucessfully");
+   window.location.assign( 'HomePage.html');
+   }
+   else if (res.ResCode == "100"){
+     alert("Order Id is not present ")
+   }
+   else{
+     alert ("Unable to access the application ")
+   }
+}
+}
+</script
+>
+</head>
+<body>
+<h2>UpdateOrder</h2>
+<style>
+h2 {text-align: center;}
+</style>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form>
+<form action="javascript:UpdateOrder()">
+  <label for="ORDER_ID">ORDER_ID:</label><br>
+  <input type="text" id="ORDER_ID" name="ORDER_ID" value="" required><br>
+  <label for="Customer_ID">Customer_ID:</label><br>
+  <input type="text" id="Customer_ID" name="Customer_ID" value="" required><br>
+  <label for="PRODUCT_ID">PRODUCT_ID:</label><br>
+  <input type="text" id="PRODUCT_ID" name="PRODUCT_ID" value="" required><br>
+  <label for="QUANTITY">QUANTITY:</label><br>
+  <input type="text" id="QUANTITY" name="QUANTITY" value="" pattern="[0-9]+"><br>
+  <label for="LIST_PRICE">LIST_PRICE:</label><br>
+  <input type="text" id="LIST_PRICE" name="LIST_PRICE" value="" pattern="[0-9]+"><br>
+  <label for="DISCOUNT">DISCOUNT:</label><br>
+  <input type="text" id="DISCOUNT" name="DISCOUNT" value="" pattern="[0-9]+"><br>
+  <label for="ORDER_STATUS">ORDER_STATUS:</label><br>
+  <input type="text" id="ORDER_STATUS" name="ORDER_STATUS" value="" required><br>
+  <label for="REQUIRED_DATE">REQUIRED_DATE:</label><br>
+  <input type="date" id="REQUIRED_DATE" name="REQUIRED_DATE" value="" ><br>
+  <label for="SHIPPED_DATE">SHIPPED_DATE:</label><br>
+  <input type="date" id="SHIPPED_DATE" name="SHIPPED_DATE" value="" required><br>
+   <input type="submit" value="Submit">
+  </form> 
+</body>
+</html>
+

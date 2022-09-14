@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="C:\Workspace_Bw6\E-CommerceDOC\FrontEnd\TableStyle.css" />
+<!-- <script src="request.js">-->
+<script >
+
+function GetAllProducts(){
+    var sessionid=sessionStorage.getItem('Sessionid');
+     /* var jsonObj={
+        "Product_ID":product_id,
+        "Product_Name":product_name,
+		"Brand_ID":brand_id,
+		"Model_Year":model_year,
+		"Category_ID":category_id,
+		"List_Price":list_price,
+		}; 
+    var formData =JSON.stringify(jsonObj); */
+var request = new XMLHttpRequest();
+request.open("get","http://localhost:10910/GetAllProducts?SessionId=" +sessionid)
+request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+request.send();
+request.onload= () => {
+ var res = JSON.parse(request.responseText);
+ var json = res.Product
+ /* console.log(res); */
+if(res.ResCode =="200"){
+	alert("Get All Product Sucessful");
+	console.log(json);
+	loadData(json);
+	}
+	else {
+       alert(res.ResCode);
+       alert("Fail Case");
+      window.location.href= "GetAllProducts.html";
+  }
+  
+  async function loadData(json) 
+  {
+  var selector = "results";
+  
+  jsonToTable(json,selector);
+  
+  function jsonToTable(json, selector) 
+  {
+  var html=[];
+  
+	html.push("<table>\n<tbody>");
+	 html.push("<tr>");
+
+    html.push("<th>" + "PRODUCT_ID" + "</td>");
+    html.push("<th>" + "PRODUCT_NAME" + "</td>");
+    html.push("<th>" + "BRAND_ID " + "</td>");
+    html.push("<th>" + "CATEGORY_ID" + "</td>");
+    html.push("<th>" + "MODEL_YEAR" + "</td>");
+	html.push("<th>" + "LIST_PRICE" + "</td>");
+    html.push("</tr>")
+	json.forEach(function (item) {
+      //begin forEach
+
+      //add the opening table row tag
+      html.push("<tr>");
+
+      //loop though each of the objects properties
+      for (var key in item) {
+        //begin for in loop
+
+        //append the table data containing the objects property value
+        html.push("<td>" + item[key] + "</td>");
+      } //end for in loop
+
+      //add the closing table row tag
+      html.push("</tr>");
+    });
+  
+  html.push("<table>\n</tbody>");
+
+    //testing display of results
+    document.getElementById(selector).innerHTML = html.join("");
+  } 
+}	
+
+   /* window.location.href="Login.html"; */
+   }
+  
+}
+
+
+</script
+>
+</head>
+<body style="background-color:Aquamarine;">
+<h2>GetAllProducts</h2>
+<style>
+h2 {text-align: center;}
+</style>
+<form action="HomePage.html">
+  <input type="submit" value="Home">
+</form><br><br>
+
+
+
+<form action="javascript:GetAllProducts()">
+     <input type="submit" value="GetAllProducts">
+  </form> 
+  <div id="results"></div>
+</body>
+</html>
+
